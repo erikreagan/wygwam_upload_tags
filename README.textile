@@ -9,6 +9,8 @@ h3. Requirements
 * "ExpressionEngine":http://expressionengine.com/index.php?affiliate=brandonkelly&page=/ 1.6.8
 * "Wygwam":http://pixelandtonic.com 2.0.1 or later
 
+(ExpressionEngine 2.0 version "available here":http://github.com/brandonkelly/wygwam_upload_tags)
+
 h3. Installation
 
 * Upload ext.wygwam_upload_tags.php to system/extensions/
