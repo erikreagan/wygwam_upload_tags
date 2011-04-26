@@ -13,7 +13,7 @@
 class Wygwam_upload_tags {
 
 	var $name           = 'Wygwam Upload Tags';
-	var $version        = '1.0';
+	var $version        = '1.1';
 	var $description    = 'Parses Wygwam\'s Upload Directory settings for {username}, {member_id}, and {group_id}';
 	var $settings_exist = 'n';
 	var $docs_url       = 'http://pixelandtonic.com/wygwam';
@@ -82,7 +82,25 @@ class Wygwam_upload_tags {
 		}
       
 		// Does this field have an Upload Directory set?
-		if ($settings['upload_dir'] && isset($config['filebrowserImageBrowseUrl']))
+		// Start by setting it to FALSE (assuming "no")
+		$upload_dir =  FALSE;
+		
+		// Run through the possibilities (supporting current and old versions of Wygwam)
+		if (isset($config['upload_dir']) AND $config['upload_dir'] != '')
+		{
+			$upload_dir = $config['upload_dir'];
+		}
+		else if(isset($settings['upload_dir']) AND $settings['upload_dir'] != '')
+		{	
+			$upload_dir = $settings['upload_dir'];
+		}
+		else if(isset($config['filebrowserImageBrowseUrl']))
+		{
+			$upload_dir = substr($config['filebrowserImageBrowseUrl'], -1, 1);
+		}
+		
+		// We've defined the upload directory value (if there is one) so now we can do the tag/value swapping
+		if ($upload_dir)
 		{
 			// Prepare the tags we wish to parse
 			$vars = array(
@@ -92,14 +110,14 @@ class Wygwam_upload_tags {
 			);
 
 			// Get a reference to the Upload Directory session array
-			$sess =& $_SESSION['wygwam_'.$settings['upload_dir']];
+			$sess =& $_SESSION['wygwam_'.$upload_dir];
 
 			// Parse the Server Path and URL settings
 			$sess['p'] = $FNS->var_swap($sess['p'], $vars); // Server Path
 			$sess['u'] = $FNS->var_swap($sess['u'], $vars); // URL
 		}
-      
-
+		
+		
 		// Return the (unmodified) config
 		return $config;
 	}
